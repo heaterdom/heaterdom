@@ -1,5 +1,5 @@
 # Imports
-from os import system # Import os for system commands. This is needed to compile sass 
+from os import system  # Import os for system commands. This is needed to compile sass
 from os.path import exists
 from sys import argv
 from time import sleep
@@ -15,8 +15,10 @@ VERSION = "0.1.0"
 # Create rich console
 console = Console()
 
+
 class IsSass(Exception):
     pass
+
 
 class IsGlobal(Exception):
     pass
@@ -34,8 +36,9 @@ Commands:
     """
     print(helpMsg)
 
+
 def compile():
-    for child in Path('./content').iterdir():
+    for child in Path("./content").iterdir():
         if child.is_file():
             md = Markdown(f"# {child}")
             console.print(md)
@@ -44,12 +47,13 @@ def compile():
                 out = f"\nCompiled {child} to html\n"
                 console.print(out, style="green")
                 sleep(1)
-                with open(child, 'rt') as f:
+                with open(child, "rt") as f:
                     rendered = markdown(f.read())
                     filename = PurePath(child)
                     filename_no_ext = filename.stem
-                    with open(f'app/{filename_no_ext}.html', "wt") as f:
-                        f.write(f"""
+                    with open(f"app/{filename_no_ext}.html", "wt") as f:
+                        f.write(
+                            f"""
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -59,72 +63,100 @@ def compile():
         <title>{filename_no_ext}</title>
     </head>
     <body>   
-                    """)
-                    css = ''
+                    """
+                        )
+                    css = ""
                     if exists("./styles"):
-                        with open(f'app/{filename_no_ext}.html', "at") as f:
-                            f.write("""
+                        with open(f"app/{filename_no_ext}.html", "at") as f:
+                            f.write(
+                                """
         <style>
-                            """)
-                        for childCSS in Path('./styles').iterdir():
-                            css = ''
+                            """
+                            )
+                        for childCSS in Path("./styles").iterdir():
+                            css = ""
                             if childCSS.is_file():
                                 filenameCss = PurePath(child)
                                 filenameCss_no_ext = filenameCss.stem
                                 fullFileNameCss = PurePath(childCSS)
-                                system('sass --no-source-map styles/:styles/')
+                                system("sass --no-source-map styles/:styles/")
                                 try:
-                                    if fullFileNameCss.suffix == '.sass' or fullFileNameCss.suffix == '.scss':
+                                    if (
+                                        fullFileNameCss.suffix == ".sass"
+                                        or fullFileNameCss.suffix == ".scss"
+                                    ):
                                         raise IsSass()
-                                    elif fullFileNameCss.stem == '*':
-                                        with open('styles/*.css', "rt") as f:
+                                    elif fullFileNameCss.stem == "*":
+                                        with open("styles/*.css", "rt") as f:
                                             css = f.read()
                                         raise IsGlobal()
                                     else:
-                                        with open(f'styles/{filenameCss_no_ext}.css', "rt") as f:
+                                        with open(
+                                            f"styles/{filenameCss_no_ext}.css", "rt"
+                                        ) as f:
                                             css = f.read()
-                                        console.print(f'\nCss {childCSS} injected into {filename_no_ext}.html', style="green")
+                                        console.print(
+                                            f"\nCss {childCSS} injected into {filename_no_ext}.html",
+                                            style="green",
+                                        )
                                 except FileNotFoundError:
-                                    console.print(f'\nNo css to inject in {filename_no_ext}.html', style="red")
+                                    console.print(
+                                        f"\nNo css to inject in {filename_no_ext}.html",
+                                        style="red",
+                                    )
                                 except IsSass:
-                                    console.print(f'\nFound sass, skipping', style="blue")
+                                    console.print(
+                                        f"\nFound sass, skipping", style="blue"
+                                    )
                                 except IsGlobal:
-                                    console.print('Found global styles. Injecting', style='green')
-                                with open(f'app/{filename_no_ext}.html', "at") as f:
-                                    f.write(f'''
+                                    console.print(
+                                        "Found global styles. Injecting", style="green"
+                                    )
+                                with open(f"app/{filename_no_ext}.html", "at") as f:
+                                    f.write(
+                                        f"""
 {css}
-                                            ''')
-                        sleep(1)            
+                                            """
+                                    )
+                        sleep(1)
                     else:
-                        console.print('No styles directory, skipping', style="blue") 
-                    with open(f'app/{filename_no_ext}.html', "at") as f:
-                        f.write("""
+                        console.print("No styles directory, skipping", style="blue")
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                        f.write(
+                            """
         </style>                        
-                        """)
+                        """
+                        )
 
-                    with open(f'app/{filename_no_ext}.html', "at") as f:
-                        f.write(f"""
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                        f.write(
+                            f"""
         { rendered }
-                        """)
-                    with open(f'app/{filename_no_ext}.html', "at") as f:
-                        f.write('''
+                        """
+                        )
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                        f.write(
+                            """
     </body>
 </html>
-                        ''')
+                        """
+                        )
             except:
-                out = f'\nFailed to compile {child} to html'
-                console.print(out, style="red") 
+                out = f"\nFailed to compile {child} to html"
+                console.print(out, style="red")
                 sleep(1)
-            
+
         else:
-            console.print(f'{child} is a directory', style="red")
+            console.print(f"{child} is a directory", style="red")
 
 
 def serve(PORT):
     DIRECTORY = "app"
+
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=DIRECTORY, **kwargs)
+
         def send_error(self, code, message=None):
             if code == 404:
                 self.error_message_format = "<h1 style='text-align: center'>404<h1/>"
@@ -134,14 +166,15 @@ def serve(PORT):
         console.print(f"Serving at port {PORT}", style="blue")
         httpd.serve_forever()
 
-try: 
+
+try:
     if argv[1] == "compile":
         compile()
     elif argv[1] == "serve":
         if argv[2] == "--port":
             serve(int(argv[3]))
         elif len(argv) != 2:
-            console.print('Error! Extra arguments passed\n', style="red")
+            console.print("Error! Extra arguments passed\n", style="red")
             help()
         else:
             serve(3000)

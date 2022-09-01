@@ -12,4 +12,4 @@ git clone https://github.com/micziz/heaterdom heaterdom-app
 
 ## Usage
 
-Write some markdown in the content dir. 
+Write some markdown in the content dir.
