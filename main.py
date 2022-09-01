@@ -35,16 +35,19 @@ def compile():
         if child.is_file():
             md = Markdown(f"# {child}")
             console.print(md)
+            sleep(1)
             try:
                 out = f"\nCompiled {child} to html\n"
+                console.print(out, style="green")
+                sleep(1)
                 with open(child, 'rt') as f:
                     rendered = markdown(f.read())
                     filename = PurePath(child)
                     filename_no_ext = filename.stem
-                    if exists("/styles"):
+                    css = ''
+                    if exists("./styles"):
                         for childCSS in Path('./styles').iterdir():
                             if childCSS.is_file():
-                                css = ''
                                 filenameCss = PurePath(child)
                                 filenameCss_no_ext = filenameCss.stem
                                 fullFileNameCss = PurePath(childCSS)
@@ -60,8 +63,9 @@ def compile():
                                     console.print(f'\nNo css to inject in {filename_no_ext}.html', style="red")
                                 except CustomError:
                                     console.print(f'\nFound sass, skipping', style="blue")
-                                
-
+                        sleep(1)            
+                    else:
+                        console.print('No styles directory, skipping', style="blue") 
                     with open(f'app/{filename_no_ext}.html', "wt") as f:
                         f.write(f"""
 <!DOCTYPE html>
@@ -82,14 +86,10 @@ def compile():
 </body>
 </html>
 """)
-                sleep(1)
             except:
                 out = f'\nFailed to compile {child} to html'
-                sleep(1)
-            if out == f'\nFailed to compile {child} to html':
                 console.print(out, style="red") 
-            else:
-                console.print(out, style="green")
+                sleep(1)
         else:
             console.print(f'{child} is a directory', style="red")
 
