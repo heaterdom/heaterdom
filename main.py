@@ -15,8 +15,12 @@ VERSION = "0.1.0"
 # Create rich console
 console = Console()
 
-class CustomError(Exception):
+class IsSass(Exception):
     pass
+
+class IsGlobal(Exception):
+    pass
+
 
 def help():
     helpMsg = f"""
@@ -44,9 +48,26 @@ def compile():
                     rendered = markdown(f.read())
                     filename = PurePath(child)
                     filename_no_ext = filename.stem
+                    with open(f'app/{filename_no_ext}.html', "wt") as f:
+                        f.write(f"""
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{filename_no_ext}</title>
+    </head>
+    <body>   
+                    """)
                     css = ''
                     if exists("./styles"):
+                        with open(f'app/{filename_no_ext}.html', "at") as f:
+                            f.write("""
+        <style>
+                            """)
                         for childCSS in Path('./styles').iterdir():
+                            css = ''
                             if childCSS.is_file():
                                 filenameCss = PurePath(child)
                                 filenameCss_no_ext = filenameCss.stem
@@ -54,42 +75,47 @@ def compile():
                                 system('sass --no-source-map styles/:styles/')
                                 try:
                                     if fullFileNameCss.suffix == '.sass' or fullFileNameCss.suffix == '.scss':
-                                        raise CustomError()
+                                        raise IsSass()
+                                    elif fullFileNameCss.stem == '*':
+                                        with open('styles/*.css', "rt") as f:
+                                            css = f.read()
+                                        raise IsGlobal()
                                     else:
                                         with open(f'styles/{filenameCss_no_ext}.css', "rt") as f:
                                             css = f.read()
                                         console.print(f'\nCss {childCSS} injected into {filename_no_ext}.html', style="green")
                                 except FileNotFoundError:
                                     console.print(f'\nNo css to inject in {filename_no_ext}.html', style="red")
-                                except CustomError:
+                                except IsSass:
                                     console.print(f'\nFound sass, skipping', style="blue")
+                                except IsGlobal:
+                                    console.print('Found global styles. Injecting', style='green')
+                                with open(f'app/{filename_no_ext}.html', "at") as f:
+                                    f.write(f'''
+{css}
+                                            ''')
                         sleep(1)            
                     else:
                         console.print('No styles directory, skipping', style="blue") 
-                    with open(f'app/{filename_no_ext}.html', "wt") as f:
-                        f.write(f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>   
-    
-    <style>
-        {css}
-    </style>
+                    with open(f'app/{filename_no_ext}.html', "at") as f:
+                        f.write("""
+        </style>                        
+                        """)
 
-    { rendered }
-</body>
+                    with open(f'app/{filename_no_ext}.html', "at") as f:
+                        f.write(f"""
+        { rendered }
+                        """)
+                    with open(f'app/{filename_no_ext}.html', "at") as f:
+                        f.write('''
+    </body>
 </html>
-""")
+                        ''')
             except:
                 out = f'\nFailed to compile {child} to html'
                 console.print(out, style="red") 
                 sleep(1)
+            
         else:
             console.print(f'{child} is a directory', style="red")
 
