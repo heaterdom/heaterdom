@@ -255,6 +255,10 @@ try:
     elif argv[1] == "--help":
         # Print help
         help()
+    # If the argument is --version
+    elif argv[1] == "--version":
+        # Print version and location of the file
+        console.print(f"heaterdom v{VERSION}, found at {__file__}", style="green")  
     # No arguments passed
     else:
         # Print help
