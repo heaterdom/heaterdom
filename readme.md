@@ -51,7 +51,7 @@ python3 heaterdom.py serve --port 8080
 
 To add css, create a directory called `styles`. Then, write your css with the same name as the html file you want to customize.
 
-If you prefer to use sass, just change the file extension to `.scss` or `.sass`.
+If you prefer to use sass, just change the file extension to `.scss` or `.sass`. Heaterdom will compile them automatically.
 
 ## TODO
 
