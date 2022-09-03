@@ -245,18 +245,12 @@ try:
         compile()
     # Else if the command is serve
     elif argv[1] == "serve":
-        # Check if the --port argument is provided
-        if argv[2] == "--port":
-            # Serve with the port argument
-            serve(int(argv[3]))
-        # If there are not arguments
-        elif len(argv) != 2:
-            # Print an error
-            console.print("Error! Extra arguments passed\n", style="red")
-            # Print help
-            help()
-        # Else serve to port 3000
-        else:
+        try:
+            # Check if the --port argument is provided
+            if argv[2] == "--port":
+                # Serve with the port argument
+                serve(int(argv[3]))
+        except IndexError:
             serve(3000)
     # If the first argument is help
     elif argv[1] == "--help":
