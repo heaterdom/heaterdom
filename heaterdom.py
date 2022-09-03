@@ -15,7 +15,7 @@ from rich.markdown import Markdown   # Import Markdown for printing markdown
 from mistletoe import markdown as rm   # Import markdown from mistletoe
 
 # Version constant
-VERSION = "0.1.0-beta"
+VERSION = '0.1.0-beta'
 
 # Create rich console
 console = Console()
@@ -33,7 +33,7 @@ class IsGlobal(Exception):
 # Help function
 def help():
     # The help message
-    helpMsg = f"""
+    helpMsg = f'''
 python3 main.py [command] [options]
 
 Commands:
@@ -41,7 +41,7 @@ Commands:
     serve: servers the app dir [--port: specify the port]
 
     heatherdom v{VERSION}. Located at {__file__}
-    """
+    '''
     # Print the help message
     console.print(helpMsg, style="green")
 
@@ -49,18 +49,18 @@ Commands:
 # Compile function
 def compile():
     # For every file in the ./content directory
-    for child in Path("./content").iterdir():
+    for child in Path('./content').iterdir():
         # If it's a file (directory's are not supported)
         if child.is_file():
             # Print the name of the file in markdown
-            md = Markdown(f"# {child}")
+            md = Markdown(f'# {child}')
             console.print(md)
             # Sleep for 1 second
             sleep(1)
             # Try:
             try:
                 # Open the child
-                with open(child, "rt") as f:
+                with open(child, 'rt') as f:
                     # Render markdown using mistletoe
                     markdown = rm(f.read())
                     # Get the filename
@@ -68,7 +68,7 @@ def compile():
                     # Remove the extension
                     filename_no_ext = filename.stem
                     # Open the html and write an initial boilerplate
-                    with open(f"app/{filename_no_ext}.html", "wt") as f:
+                    with open(f'app/{filename_no_ext}.html', 'wt') as f:
                         f.write(
                             f'''
 <!DOCTYPE html>
@@ -86,16 +86,16 @@ def compile():
                     # Declare css in case it does not exist
                     css = ''
                     # If the css directory exists
-                    if exists("./styles"):
+                    if exists('./styles'):
                         # Open the html and write the initial style tag
-                        with open(f"app/{filename_no_ext}.html", "at") as f:
+                        with open(f'app/{filename_no_ext}.html', 'at') as f:
                             f.write(
-                                """
+                                '''
         <style>
-                            """
+                            '''
                             )
                         # For every file in ./styles
-                        for childCSS in Path("./styles").iterdir():
+                        for childCSS in Path('./styles').iterdir():
                             # Clean the css
                             css = ''
                             # If the css is a file
@@ -112,15 +112,15 @@ def compile():
                                 try:
                                     # If the filename.suffix is = sass or scss
                                     if (
-                                        fullFileNameCss.suffix == ".sass"
-                                        or fullFileNameCss.suffix == ".scss"
+                                        fullFileNameCss.suffix == '.sass'
+                                        or fullFileNameCss.suffix == '.scss'
                                     ):
                                         # Skip it because its sass
                                         raise IsSass()
                                     # If the filename without the extension is * (global, applied to every html file)
-                                    elif fullFileNameCss.stem == "*":
+                                    elif fullFileNameCss.stem == '*':
                                         # Read it
-                                        with open("styles/*.css", "rt") as f:
+                                        with open('styles/*.css', 'rt') as f:
                                             css = f.read()
                                         # Raise an error to skip it
                                         raise IsGlobal()
@@ -128,36 +128,36 @@ def compile():
                                     else:
                                         # Open the corresponding filename
                                         with open(
-                                            f"styles/{filenameCss_no_ext}.css", "rt"
+                                            f'styles/{filenameCss_no_ext}.css', 'rt'
                                         ) as f:
                                             # and read the css
                                             css = f.read()
                                         # Print that the css is getting injected
                                         console.print(
-                                            f"\nCss {childCSS} injected into {filename_no_ext}.html",
-                                            style="green",
+                                            f'\nCss {childCSS} injected into {filename_no_ext}.html',
+                                            style='green',
                                         )
                                 # If no file is found
                                 except FileNotFoundError:
                                     # Print that is there is no css
                                     console.print(
-                                        f"\nNo css to inject in {filename_no_ext}.html",
-                                        style="red",
+                                        f'\nNo css to inject in {filename_no_ext}.html',
+                                        style='red',
                                     )
                                 # If it's sass
                                 except IsSass:
                                     # Say it's sass
                                     console.print(
-                                        "\nFound sass, skipping", style="blue"
+                                        '\nFound sass, skipping', style="blue"
                                     )
                                 # If it's global styles
                                 except IsGlobal:
                                     # Say it's global styles
                                     console.print(
-                                        "Found global styles. Injecting", style="green"
+                                        'Found global styles. Injecting', style="green"
                                     )
                                 # Open the corresponding html file
-                                with open(f"app/{filename_no_ext}.html", "at") as f:
+                                with open(f'app/{filename_no_ext}.html', 'at') as f:
                                     # And write the css
                                     f.write(
                                         f'''
@@ -173,9 +173,9 @@ def compile():
                     # Close style tags
                     with open(f'app/{filename_no_ext}.html', 'at') as f:
                         f.write(
-                            """
+                            '''
         </style>
-                        """
+                        '''
                         )
                     # Open the html file to write the rendered markdown
                     with open(f'app/{filename_no_ext}.html', 'at') as f:
@@ -222,47 +222,47 @@ def serve(PORT):
         # Custom 404 error if file not found
         def send_error(self, code, message=None):
             if code == 404:
-                self.error_message_format = "<h1 style='text-align: center'>404<h1/>"
+                self.error_message_format = '<h1 style="text-align: center">404<h1/>'
                 http.server.SimpleHTTPRequestHandler.send_error(self, code, message)
     
     # Tcp server starter with the PORT.
     with TCPServer(("", PORT), Handler) as httpd:
         # Print that it's serving and at witch port
-        console.print(f"Serving at port {PORT}", style="blue")
+        console.print(f'Serving at port {PORT}', style='blue')
         # Start server
         httpd.serve_forever()
 
 # CLI Arguments
 try:
     # If argv[1] == "compile"
-    if argv[1] == "compile":
+    if argv[1] == 'compile':
         # Run the compile function
         compile()
     # Else if the command is serve
-    elif argv[1] == "serve":
+    elif argv[1] == 'serve':
         # Check if the --port argument is provided
-        if argv[2] == "--port":
+        if argv[2] == '--port':
             # Serve with the port argument
             serve(int(argv[3]))
         # If there are not arguments
         elif len(argv) != 2:
             # Print an error
-            console.print("Error! Extra arguments passed\n", style="red")
+            console.print('Error! Extra arguments passed\n', style='red')
             # Print help
             help()
         # Else serve to port 3000
         else:
             serve(3000)
     # If the first argument is help
-    elif argv[1] == "--help":
+    elif argv[1] == '--help':
         # Print help
         help()
     # If the argument is --version
-    elif argv[1] == "--version":
+    elif argv[1] == '--version':
         # Print version and location of the file
-        console.print(f"""
-    heaterdom v{VERSION}, found at {__file__}",
-        """, style="green")  
+        console.print(f'''
+    heaterdom v{VERSION}, found at {__file__},
+        ''', style='green')  
     # No arguments passed
     else:
         # Print help
