@@ -18,7 +18,7 @@ from rich.markdown import Markdown  # Import Markdown for printing markdown
 from mistletoe import markdown as rm  # Import markdown from mistletoe
 
 # Version constant
-VERSION = "0.1.0-beta"
+VERSION = "0.1.0"
 
 # Create rich console
 console = Console()
