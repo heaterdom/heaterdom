@@ -43,7 +43,7 @@ Commands:
     heatherdom v{VERSION}. Located at {__file__}
     """
     # Print the help message
-    print(helpMsg)
+    console.print(helpMsg, style="green")
 
 
 # Compile function
@@ -260,7 +260,9 @@ try:
     # If the argument is --version
     elif argv[1] == "--version":
         # Print version and location of the file
-        console.print(f"heaterdom v{VERSION}, found at {__file__}", style="green")  
+        console.print(f"""
+    heaterdom v{VERSION}, found at {__file__}",
+        """, style="green")  
     # No arguments passed
     else:
         # Print help
