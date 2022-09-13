@@ -12,7 +12,7 @@ Minimal and transparent static site generator.
 Use the install.sh to bootstrap a new project. Curl, Python3 and git is required.
 
 ```bash
-https://gist.githubusercontent.com/micziz/6f280cfaa32fae4ed865d5bd49cbf500/raw/9446ad650873e2b79667a8612136b464a2816886/install.sh | bash
+bash <(curl -sL https://gist.githubusercontent.com/micziz/6f280cfaa32fae4ed865d5bd49cbf500/raw/09a002b84d3f9cbd2ee0ab65f9e60b40f7b152a7/install.sh)
 ```
 
 ## Usage
