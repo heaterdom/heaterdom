@@ -9,16 +9,10 @@ Minimal and transparent static site generator.
 
 ## Installation
 
-Change `heaterdom-app` in whatever you want.
-
-```sh
-git clone https://github.com/micziz/heaterdom heaterdom-app
-```
-
-Then install the dependencies with pip
+Use the install.sh to bootstrap a new project. Curl, Python3 and git is required.
 
 ```bash
-pip3 install -r requirements.txt
+https://gist.githubusercontent.com/micziz/6f280cfaa32fae4ed865d5bd49cbf500/raw/9446ad650873e2b79667a8612136b464a2816886/install.sh | bash
 ```
 
 ## Usage
