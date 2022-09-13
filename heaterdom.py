@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Standard Library Imports
 from os import system  # Import os for system commands. This is needed to compile sass
 from os.path import exists  # Import exists from path to check if styles exists
