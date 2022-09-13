@@ -5,17 +5,20 @@ from os import system  # Import os for system commands. This is needed to compil
 from os.path import exists  # Import exists from path to check if styles exists
 from sys import argv  # Import argv for arguments
 from time import sleep  # Import time to slow down a bit
-from pathlib import Path, PurePath  # Import Path for iterating in directory and PurePath for some string manipulation
+from pathlib import (
+    Path,
+    PurePath,
+)  # Import Path for iterating in directory and PurePath for some string manipulation
 import http.server  # Import http.server to serve the application
 from socketserver import TCPServer  # Import socketserver for creating a server.
 
 # External imports
-from rich.console import Console   # Import Console for printing colored output
-from rich.markdown import Markdown   # Import Markdown for printing markdown
-from mistletoe import markdown as rm   # Import markdown from mistletoe
+from rich.console import Console  # Import Console for printing colored output
+from rich.markdown import Markdown  # Import Markdown for printing markdown
+from mistletoe import markdown as rm  # Import markdown from mistletoe
 
 # Version constant
-VERSION = "0.1.0-beta"
+VERSION = "0.1.0"
 
 # Create rich console
 console = Console()
@@ -43,7 +46,7 @@ Commands:
     heatherdom v{VERSION}. Located at {__file__}
     """
     # Print the help message
-    print(helpMsg)
+    console.print(helpMsg, style="green")
 
 
 # Compile function
@@ -70,7 +73,7 @@ def compile():
                     # Open the html and write an initial boilerplate
                     with open(f"app/{filename_no_ext}.html", "wt") as f:
                         f.write(
-                            f'''
+                            f"""
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -81,10 +84,10 @@ def compile():
         <title>{filename_no_ext}</title>
     </head>
     <body>
-                    '''
+                    """
                         )
                     # Declare css in case it does not exist
-                    css = ''
+                    css = ""
                     # If the css directory exists
                     if exists("./styles"):
                         # Open the html and write the initial style tag
@@ -97,7 +100,7 @@ def compile():
                         # For every file in ./styles
                         for childCSS in Path("./styles").iterdir():
                             # Clean the css
-                            css = ''
+                            css = ""
                             # If the css is a file
                             if childCSS.is_file():
                                 # Get the filename
@@ -107,7 +110,7 @@ def compile():
                                 # Get the css name
                                 fullFileNameCss = PurePath(childCSS)
                                 # Compile sass
-                                system('sass --no-source-map styles/:styles/')
+                                system("sass --no-source-map styles/:styles/")
                                 # Try catch
                                 try:
                                     # If the filename.suffix is = sass or scss
@@ -160,58 +163,59 @@ def compile():
                                 with open(f"app/{filename_no_ext}.html", "at") as f:
                                     # And write the css
                                     f.write(
-                                        f'''
+                                        f"""
 {css}
-                                        '''
+                                        """
                                     )
                         # Sleep for 1 second
                         sleep(1)
                     # Else:
                     else:
                         # Print that there is no style directory
-                        console.print('\nNo styles directory, skipping', style='blue')
+                        console.print("\nNo styles directory, skipping", style="blue")
                     # Close style tags
-                    with open(f'app/{filename_no_ext}.html', 'at') as f:
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
                         f.write(
                             """
         </style>
                         """
                         )
                     # Open the html file to write the rendered markdown
-                    with open(f'app/{filename_no_ext}.html', 'at') as f:
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
                         f.write(
-                            f'''
+                            f"""
         {markdown}
-                            '''
+                            """
                         )
                     # Close body and html tags
-                    with open(f'app/{filename_no_ext}.html', 'at') as f:
+                    with open(f"app/{filename_no_ext}.html", "at") as f:
                         f.write(
-                            '''
+                            """
     </body>
 </html>
-                        '''
+                        """
                         )
                 # Print out that it has compiled
-                console.print(f'\nCompiled {child} to html', style='green')
+                console.print(f"\nCompiled {child} to html", style="green")
                 # Sleep
                 sleep(1)
             # Except control c, abort
             except KeyboardInterrupt:
-                console.print('USER ABORTED', style='red')
+                console.print("USER ABORTED", style="red")
             # Except
             except:
                 # It failed to compile
-                console.print(f'\nFailed to compile {child} to html', style='red')
+                console.print(f"\nFailed to compile {child} to html", style="red")
                 sleep(1)
         # Else, print that it's a directory
         else:
-            console.print(f'\n{child} is a directory', style='red')
+            console.print(f"\n{child} is a directory", style="red")
+
 
 # Serve function (Takes port as an argument)
 def serve(PORT):
     # Get the directory (app)
-    DIRECTORY = 'app'
+    DIRECTORY = "app"
 
     # Handler class
     class Handler(http.server.SimpleHTTPRequestHandler):
@@ -222,15 +226,16 @@ def serve(PORT):
         # Custom 404 error if file not found
         def send_error(self, code, message=None):
             if code == 404:
-                self.error_message_format = "<h1 style='text-align: center'>404<h1/>"
+                self.error_message_format = '<h1 style="text-align: center">404<h1/>'
                 http.server.SimpleHTTPRequestHandler.send_error(self, code, message)
-    
+
     # Tcp server starter with the PORT.
     with TCPServer(("", PORT), Handler) as httpd:
         # Print that it's serving and at witch port
         console.print(f"Serving at port {PORT}", style="blue")
         # Start server
         httpd.serve_forever()
+
 
 # CLI Arguments
 try:
@@ -240,23 +245,26 @@ try:
         compile()
     # Else if the command is serve
     elif argv[1] == "serve":
-        # Check if the --port argument is provided
-        if argv[2] == "--port":
-            # Serve with the port argument
-            serve(int(argv[3]))
-        # If there are not arguments
-        elif len(argv) != 2:
-            # Print an error
-            console.print("Error! Extra arguments passed\n", style="red")
-            # Print help
-            help()
-        # Else serve to port 3000
-        else:
+        try:
+            # Check if the --port argument is provided
+            if argv[2] == "--port":
+                # Serve with the port argument
+                serve(int(argv[3]))
+        except IndexError:
             serve(3000)
     # If the first argument is help
     elif argv[1] == "--help":
         # Print help
         help()
+    # If the argument is --version
+    elif argv[1] == "--version":
+        # Print version and location of the file
+        console.print(
+            f"""
+    heaterdom v{VERSION}, found at {__file__},
+        """,
+            style="green",
+        )
     # No arguments passed
     else:
         # Print help

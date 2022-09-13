@@ -5,7 +5,7 @@ Minimal and transparent static site generator.
 ## Features
 
 - Minimal. Compiles your html and css in under 300 lines of code.
-- Transparent. The cli is not hidden, it's the main.py file. You can use and modifying it to your liking.
+- Transparent. The cli is not hidden, it's the heaterdom.py file. You can use and modifying it to your liking.
 
 ## Installation
 
@@ -28,7 +28,7 @@ Write some markdown in the content directory
 Then, once you have finished writing, run:
 
 ```bash
-python3 main.py compile
+python3 heaterdom.py compile
 ```
 
 This will compile the Markdown to HTML.
@@ -36,26 +36,22 @@ This will compile the Markdown to HTML.
 Then to serve it run:
 
 ```bash
-python3 main.py serve
+python3 heaterdom.py serve
 ```
 
-This will serve it at `localhost::3000`. 
+This will serve it at `localhost::3000`
 
 If you want to customize the port, just add the --port option followed by the port number.
 
 ```bash
-python3 main.py serve --port 8080
+python3 heaterdom.py serve --port 8080
 ```
 
 ## Styling
 
 To add css, create a directory called `styles`. Then, write your css with the same name as the html file you want to customize.
 
-If you prefer to use sass, just change the file extension to `.scss` or `.sass`.
-
-## Contributing
-
-Thanks for contributing! Before contributing, please read the contributing guidelines found [here](contributing.md)
+If you prefer to use sass, just change the file extension to `.scss` or `.sass`. Heaterdom will compile them automatically.
 
 ## TODO
 
@@ -72,10 +68,10 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+limitations under the License
