@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 # Standard Library Imports
-from os import system  # Import os for system commands. This is needed to compile sass
+from os import (
+    mkdir,
+    system,
+)  # Import os for system commands. This is needed to compile sass
 from os.path import exists  # Import exists from path to check if styles exists
 from sys import argv  # Import argv for arguments
 from time import sleep  # Import time to slow down a bit
@@ -18,7 +21,7 @@ from rich.markdown import Markdown  # Import Markdown for printing markdown
 from mistletoe import markdown as rm  # Import markdown from mistletoe
 
 # Version constant
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 # Create rich console
 console = Console()
@@ -212,6 +215,40 @@ def compile():
             console.print(f"\n{child} is a directory", style="red")
 
 
+# Create function
+def create(name):
+    # Open a new file with the name and write some content
+    with open(f"content/{name}.md", "wt") as f:
+        f.write("# Generated with the CLI")
+
+
+# Create css function
+def createCss(name, isItSass):
+    # Check if it's sass
+    if isItSass:
+        # If yes
+        try:
+            # Open a new file with scss
+            f = open(f"styles/{name}.scss", "xt")
+        # If the styles directory does not exist
+        except FileNotFoundError:
+            # Create styles dir
+            mkdir("styles")
+            # Open a new file with scss
+            f = open(f"styles/{name}.scss", "xt")
+    # else
+    else:
+        try:
+            # Open a new file with scss
+            f = open(f"styles/{name}.css", "xt")
+        # If the styles directory does not exist
+        except FileNotFoundError:
+            # Create styles dir
+            mkdir("styles")
+            # Open a new file with scss
+            f = open(f"styles/{name}.css", "xt")
+
+
 # Serve function (Takes port as an argument)
 def serve(PORT):
     # Get the directory (app)
@@ -265,6 +302,19 @@ try:
         """,
             style="green",
         )
+    # If the argument is create
+    elif argv[1] == "create":
+        # If the second argument is sass
+        if argv[2] == "sass":
+            # Create css using sass
+            createCss(argv[3], True)
+        # If the second argument is css
+        elif argv[2] == "css":
+            # Create css using plain normal css
+            createCss(argv[3], False)
+        # If there is no css passed, create a new file
+        else:
+            create(argv[2])
     # No arguments passed
     else:
         # Print help

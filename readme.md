@@ -49,9 +49,9 @@ If you prefer to use sass, just change the file extension to `.scss` or `.sass`.
 
 ## TODO
 
+- [x] More options to the cli
 - [ ] Add folders
-- [ ] Add templates with jinga or another templating engine
-- [ ] More options to the cli
+- [ ] Add templates with jinga or another template engine
 - [ ] Proper documentation
 
 ## License
