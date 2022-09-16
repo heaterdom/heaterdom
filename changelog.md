@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add create, create css and create scss command.
+- Add heaterdom to workspace settings
+
 ## 0.1.2
 
 - Fix install.sh
