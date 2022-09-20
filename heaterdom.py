@@ -18,7 +18,7 @@ from socketserver import TCPServer  # Import socketserver for creating a server.
 # External imports
 from rich.console import Console  # Import Console for printing colored output
 from rich.markdown import Markdown  # Import Markdown for printing markdown
-from mistletoe import markdown as rm  # Import markdown from mistletoe
+from mistletoe import markdown as mr  # Import markdown from mistletoe
 
 # Version constant
 VERSION = "0.2.0"
@@ -53,9 +53,9 @@ Commands:
 
 
 # Compile function
-def compile():
+def compile(dir, outDir):
     # For every file in the ./content directory
-    for child in Path("./content").iterdir():
+    for child in Path(f"./{dir}").iterdir():
         # If it's a file (directory's are not supported)
         if child.is_file():
             # Print the name of the file in markdown
@@ -68,13 +68,13 @@ def compile():
                 # Open the child
                 with open(child, "rt") as f:
                     # Render markdown using mistletoe
-                    markdown = rm(f.read())
+                    markdown = mr(f.read())
                     # Get the filename
                     filename = PurePath(child)
                     # Remove the extension
                     filename_no_ext = filename.stem
                     # Open the html and write an initial boilerplate
-                    with open(f"app/{filename_no_ext}.html", "wt") as f:
+                    with open(f"{outDir}/{filename_no_ext}.html", "wt") as f:
                         f.write(
                             f"""
 <!DOCTYPE html>
@@ -94,7 +94,7 @@ def compile():
                     # If the css directory exists
                     if exists("./styles"):
                         # Open the html and write the initial style tag
-                        with open(f"app/{filename_no_ext}.html", "at") as f:
+                        with open(f"{outDir}/{filename_no_ext}.html", "at") as f:
                             f.write(
                                 """
         <style>
@@ -163,7 +163,7 @@ def compile():
                                         "Found global styles. Injecting", style="green"
                                     )
                                 # Open the corresponding html file
-                                with open(f"app/{filename_no_ext}.html", "at") as f:
+                                with open(f"{outDir}/{filename_no_ext}.html", "at") as f:
                                     # And write the css
                                     f.write(
                                         f"""
@@ -177,21 +177,21 @@ def compile():
                         # Print that there is no style directory
                         console.print("\nNo styles directory, skipping", style="blue")
                     # Close style tags
-                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                    with open(f"{outDir}/{filename_no_ext}.html", "at") as f:
                         f.write(
                             """
         </style>
                         """
                         )
                     # Open the html file to write the rendered markdown
-                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                    with open(f"{outDir}/{filename_no_ext}.html", "at") as f:
                         f.write(
                             f"""
         {markdown}
                             """
                         )
                     # Close body and html tags
-                    with open(f"app/{filename_no_ext}.html", "at") as f:
+                    with open(f"{outDir}/{filename_no_ext}.html", "at") as f:
                         f.write(
                             """
     </body>
@@ -278,8 +278,25 @@ def serve(PORT):
 try:
     # If argv[1] == "compile"
     if argv[1] == "compile":
+        if argv[2] == "--dir":
+            try:
+                if argv[4] == "--outdir":
+                    compile(argv[3], argv[5])
+                else:
+                    compile(argv[3], "app")
+            except IndexError:
+                pass
+        elif argv[2] == "--outdir":
+            try:
+                if argv[4] == "--dir":
+                    compile(argv[5], argv[3])
+                else:
+                    compile("content", argv[3])
+            except IndexError:
+                pass
+        else:
         # Run the compile function
-        compile()
+            compile("content", "app")
     # Else if the command is serve
     elif argv[1] == "serve":
         try:
@@ -325,3 +342,4 @@ except IndexError:
 # Except control c
 except KeyboardInterrupt:
     pass
+ 
