@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Add the possibility to change in directory and out directory.
+
 ## 0.2.0
 
 - Add create, create css and create scss command.

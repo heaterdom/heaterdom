@@ -4,7 +4,7 @@ Minimal and transparent static site generator.
 
 ## Features
 
-- Minimal. Compiles your html and css in under 300 lines of code.
+- Minimal. Compiles your html and css in under 400 lines of code.
 - Transparent. The cli is not hidden, it's the heaterdom.py file. You can use and modifying it to your liking.
 
 ## Installation
@@ -27,6 +27,18 @@ python3 heaterdom.py compile
 
 This will compile the Markdown to HTML.
 
+If you want to customize the directory from where the markdown comes, pass the --dir option, followed by the directory.
+
+```bash
+python3 heaterdom.py compile --dir mydir
+```
+
+Same for html
+
+```bash
+python3 heaterdom.py compile --outdir mydir
+```
+
 Then to serve it run:
 
 ```bash
@@ -40,6 +52,7 @@ If you want to customize the port, just add the --port option followed by the po
 ```bash
 python3 heaterdom.py serve --port 8080
 ```
+
 
 ## Styling
 
