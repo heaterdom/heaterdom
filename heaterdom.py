@@ -278,25 +278,28 @@ def serve(PORT):
 try:
     # If argv[1] == "compile"
     if argv[1] == "compile":
-        if argv[2] == "--dir":
-            try:
-                if argv[4] == "--outdir":
-                    compile(argv[3], argv[5])
-                else:
-                    compile(argv[3], "app")
-            except IndexError:
-                pass
-        elif argv[2] == "--outdir":
-            try:
-                if argv[4] == "--dir":
-                    compile(argv[5], argv[3])
-                else:
-                    compile("content", argv[3])
-            except IndexError:
-                pass
-        else:
-        # Run the compile function
-            compile("content", "app")
+        try:
+            if argv[2] == "--dir":
+                try:
+                    if argv[4] == "--outdir":
+                        compile(argv[3], argv[5])
+                    else:
+                        compile(argv[3], "app")
+                except IndexError:
+                    pass
+            elif argv[2] == "--outdir":
+                try:
+                    if argv[4] == "--dir":
+                        compile(argv[5], argv[3])
+                    else:
+                        compile("content", argv[3])
+                except IndexError:
+                    pass
+            else:
+            # Run the compile function
+                compile("content", "app")
+        except IndexError:
+                compile("content", "app")
     # Else if the command is serve
     elif argv[1] == "serve":
         try:
