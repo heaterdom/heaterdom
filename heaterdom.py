@@ -14,6 +14,8 @@ from pathlib import (
 )  # Import Path for iterating in directory and PurePath for some string manipulation
 import http.server  # Import http.server to serve the application
 from socketserver import TCPServer  # Import socketserver for creating a server.
+from src.utils.Errors import IsGlobal, IsSass
+from src.commands.help import help
 
 # External imports
 from rich.console import Console  # Import Console for printing colored output
@@ -25,31 +27,6 @@ VERSION = "0.2.0"
 
 # Create rich console
 console = Console()
-
-# IsSass error that extends Exception. This is to stop multiple injection messages
-class IsSass(Exception):
-    pass
-
-
-# IsGlobal error that extends Exception. This is to stop multiple injection messages
-class IsGlobal(Exception):
-    pass
-
-
-# Help function
-def help():
-    # The help message
-    helpMsg = f"""
-python3 main.py [command] [options]
-
-Commands:
-    compile: compiles markdown in the content dir into html in the app dir
-    serve: servers the app dir [--port: specify the port]
-
-    heatherdom v{VERSION}. Located at {__file__}
-    """
-    # Print the help message
-    console.print(helpMsg, style="green")
 
 
 # Compile function
